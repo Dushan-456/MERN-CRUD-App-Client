@@ -1,2 +1,0 @@
-# MERN-CRUD-App-Client
-
