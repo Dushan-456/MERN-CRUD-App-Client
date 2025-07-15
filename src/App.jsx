@@ -1,11 +1,12 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import SideNavBar from "./Components/SideNavBar";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Users from "./Components/Users/Users";
 import Settings from "./Components/Settings/Settings";
 import Products from "./Components/Products/Products";
 import Categories from "./Components/Categories/Categories";
+import SideNavBar from "./Components/SideNavBar/SideNavBar";
+import UserProfile from "./Components/UserProfile/UserProfile";
 
 function App() {
    return (
@@ -22,6 +23,8 @@ function App() {
                      <Route path="/settings" element={<Settings />} />
                      <Route path="/products" element={<Products />} />
                      <Route path="/categories" element={<Categories />} />
+                     <Route path="/profile/:id" element={<UserProfile />} />
+
                   </Routes>
                </div>
             </div>
