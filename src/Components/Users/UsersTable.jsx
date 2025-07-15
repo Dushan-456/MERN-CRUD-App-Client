@@ -86,6 +86,7 @@ function UsersTable() {
     console.log("Confirmed edit user ID:", id);
     // TODO: Make delete API call here
     setopenEditModal(false);
+      navigate(`/update/${id}`);
   };
 
 
