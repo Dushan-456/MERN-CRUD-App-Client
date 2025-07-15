@@ -12,11 +12,10 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate,Link  } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import DeleteUserModal from './DeleteUserModal'; 
-import Button from '@mui/material/Button';
 import EdituserModal from './EdituserModal';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import API from '../../assets/api';
 
 // Table columns configuration
 const columns = [
@@ -29,79 +28,95 @@ const columns = [
 ];
 
 // Sample user data
-const users =[
-    {
-      "_id": "687533311010ddb466e10f5f",
-      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
-      "name": "Dushan",
-      "gmail": "Dushan@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T16:41:21.937Z",
-      "updatedAt": "2025-07-14T16:41:21.937Z",
-      "__v": 0
-    },
-    {
-      "_id": "687533311010ddvbb466e10f5f",
-      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
-      "name": "Dushan",
-      "gmail": "Dushan@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T16:41:21.937Z",
-      "updatedAt": "2025-07-14T16:41:21.937Z",
-      "__v": 0
-    },
-    {
-      "_id": "687533311010djdb466e10f5f",
-      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
-      "name": "Dushan",
-      "gmail": "Dushan@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T16:41:21.937Z",
-      "updatedAt": "2025-07-14T16:41:21.937Z",
-      "__v": 0
-    },
-    {
-      "_id": "68753331101hvbj0ddb466e10f5f",
-      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
-      "name": "Dushan",
-      "gmail": "Dushan@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T16:41:21.937Z",
-      "updatedAt": "2025-07-14T16:41:21.937Z",
-      "__v": 0
-    },
-    {
-      "_id": "687533311h010ddb466e10f5f",
-      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
-      "name": "Dushan",
-      "gmail": "Dushan@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T16:41:21.937Z",
-      "updatedAt": "2025-07-14T16:41:21.937Z",
-      "__v": 0
-    },
-    {
-      "_id": "6875399e935cd5be0955241d",
-       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+// const users =[
+//     {
+//       "_id": "687533311010ddb466e10f5f",
+//       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+//       "name": "Dushan",
+//       "gmail": "Dushan@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T16:41:21.937Z",
+//       "updatedAt": "2025-07-14T16:41:21.937Z",
+//       "__v": 0
+//     },
+//     {
+//       "_id": "687533311010ddvbb466e10f5f",
+//       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+//       "name": "Dushan",
+//       "gmail": "Dushan@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T16:41:21.937Z",
+//       "updatedAt": "2025-07-14T16:41:21.937Z",
+//       "__v": 0
+//     },
+//     {
+//       "_id": "687533311010djdb466e10f5f",
+//       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+//       "name": "Dushan",
+//       "gmail": "Dushan@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T16:41:21.937Z",
+//       "updatedAt": "2025-07-14T16:41:21.937Z",
+//       "__v": 0
+//     },
+//     {
+//       "_id": "68753331101hvbj0ddb466e10f5f",
+//       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+//       "name": "Dushan",
+//       "gmail": "Dushan@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T16:41:21.937Z",
+//       "updatedAt": "2025-07-14T16:41:21.937Z",
+//       "__v": 0
+//     },
+//     {
+//       "_id": "687533311h010ddb466e10f5f",
+//       "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+//       "name": "Dushan",
+//       "gmail": "Dushan@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T16:41:21.937Z",
+//       "updatedAt": "2025-07-14T16:41:21.937Z",
+//       "__v": 0
+//     },
+//     {
+//       "_id": "6875399e935cd5be0955241d",
+//        "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
 
-      "name": "Navodya",
-      "gmail": "Navodya@mail.lk",
-      "age": 25,
-      "address": "Matara",
-      "createdAt": "2025-07-14T17:08:46.743Z",
-      "updatedAt": "2025-07-14T17:08:46.743Z",
-      "__v": 0
-    }
-  ]
+//       "name": "Navodya",
+//       "gmail": "Navodya@mail.lk",
+//       "age": 25,
+//       "address": "Matara",
+//       "createdAt": "2025-07-14T17:08:46.743Z",
+//       "updatedAt": "2025-07-14T17:08:46.743Z",
+//       "__v": 0
+//     }
+//   ]
 
 function UsersTable() {
   const navigate = useNavigate();
 
+  const [users , setUsers]= React.useState([]);
+
+const fetchUsers = async () => {
+  try {
+    const res = await API.get('/user/all-users');
+    // console.log("Users:", res.data.data);
+    setUsers(res.data.data);  
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
+  React.useEffect(()=>{
+    fetchUsers();
+
+  },[])
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
@@ -147,31 +162,10 @@ function UsersTable() {
   return (
     <Paper sx={{ width: '100%' }}>
  
-      <TableContainer sx={{ maxHeight: 700 }}>
+      <TableContainer sx={{ maxHeight: 600 }}>
         <Table stickyHeader aria-label="users table">
           <TableHead>
-            <TableRow>
-              <TableCell colSpan={3}>
-                <h2>
-                All Users List
-                </h2>
-              </TableCell>
-            
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-            <Link to="/users/add" style={{ textDecoration: 'none' }}>
-            <Button
-              variant="contained"
-              startIcon={<AddCircleOutlineIcon />}
-            >
-              Add New User
-            </Button>
-          </Link>
-              </TableCell>
 
-
-            </TableRow>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
