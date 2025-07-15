@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import "./AddUser.css";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
-   Container,
+   Dialog,
+   DialogTitle,
+   DialogContent,
+   DialogActions,
    Typography,
    TextField,
    Button,
@@ -10,21 +13,36 @@ import {
    FormControl,
    InputLabel,
    Select,
+   Box,
    MenuItem,
    Avatar,
    Stack,
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useNavigate } from "react-router-dom";
+import API from "../../assets/api";
 
 const AddUser = () => {
+   // const [formData, setFormData] = useState({
+   //    firstName: "",
+   //    lastName: "",
+   //    gender: "",
+   //    dob: "",
+   //    age: "",
+   //    mobile: "",
+   //    linkedin: "",
+   //    profilePicture: null,
+   // });
+   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+   // const [errorMessage, setErrorMessage] = useState("");
+
+   const navigate = useNavigate();
+
    const [formData, setFormData] = useState({
-      firstName: "",
-      lastName: "",
-      gender: "",
-      dob: "",
+      name: "",
+      gmail: "",
       age: "",
-      mobile: "",
-      linkedin: "",
-      profilePicture: null,
+      address: "",
    });
 
    const [preview, setPreview] = useState(null);
@@ -54,8 +72,29 @@ const AddUser = () => {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      console.log("Form submitted:", formData);
-      // TODO: Send formData to API (e.g., with FormData object)
+      // console.log("Form submitted:", formData);
+      sendRequest();
+      // .then(navigate(`/users`))
+   };
+
+   const sendRequest = async () => {
+      try {
+         const res = await API.post("/user/add-user", {
+            name: formData.name,
+            gmail: formData.gmail,
+            age: formData.age,
+            address: formData.address,
+         });
+
+         console.log("User added:", res.data);
+         setSuccessDialogOpen(true);
+      } catch (error) {
+         console.error(
+            "Error adding user:",
+            error.response?.data || error.message
+         );
+         // Optionally, show error message to the user
+      }
    };
 
    return (
@@ -73,7 +112,6 @@ const AddUser = () => {
                         value={formData.firstName}
                         onChange={handleChange}
                         fullWidth
-                        required
                      />
                      <TextField
                         label="Last Name"
@@ -81,12 +119,29 @@ const AddUser = () => {
                         value={formData.lastName}
                         onChange={handleChange}
                         fullWidth
+                     />
+                  </div>
+                  <div className="input">
+                     <TextField
+                        label="Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        fullWidth
+                        required
+                     />
+                     <TextField
+                        label="Gmail"
+                        name="gmail"
+                        value={formData.gmail}
+                        onChange={handleChange}
+                        fullWidth
                         required
                      />
                   </div>
 
                   <div className="input">
-                     <FormControl fullWidth required>
+                     <FormControl fullWidth>
                         <InputLabel>Gender</InputLabel>
                         <Select
                            name="gender"
@@ -107,7 +162,6 @@ const AddUser = () => {
                         onChange={handleChange}
                         fullWidth
                         InputLabelProps={{ shrink: true }}
-                        required
                      />
                      <TextField
                         label="Age"
@@ -116,6 +170,15 @@ const AddUser = () => {
                         onChange={handleChange}
                         fullWidth
                         required
+                     />
+                  </div>
+                  <div className="input">
+                     <TextField
+                        label="Addess"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        fullWidth
                      />
                   </div>
                   <div className="input">
@@ -151,6 +214,55 @@ const AddUser = () => {
                </div>
             </div>
          </form>
+
+         <Dialog
+            open={successDialogOpen}
+            onClose={() => {
+               setSuccessDialogOpen(false);
+               navigate("/users");
+            }}>
+            {/* Centered Icon */}
+            <Box
+               sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  mt: 2,
+               }}>
+               <CheckCircleIcon
+                  sx={{
+                     width: 50,
+                     height: 50,
+                     color: "#02ab32",
+                  }}
+               />
+            </Box>
+
+            <DialogTitle sx={{ textAlign: "center" }}>User Added</DialogTitle>
+
+            <DialogContent
+               sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  px: 4,
+               }}>
+               <p>The user has been added successfully!</p>
+            </DialogContent>
+
+            <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+               <Button
+                  onClick={() => {
+                     setSuccessDialogOpen(false);
+                     navigate("/users");
+                  }}
+                  autoFocus
+                  variant="contained">
+                  OK
+               </Button>
+            </DialogActions>
+         </Dialog>
       </>
    );
 };
