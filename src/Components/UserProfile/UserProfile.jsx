@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Typography, Card, CardContent, Avatar, CircularProgress } from '@mui/material';
 import "./UserProfile.css";
 import {IconButton} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteUserModal from '../Users/DeleteUserModal';
+import EdituserModal from '../Users/EdituserModal';
 
 
 
@@ -12,6 +14,34 @@ function UserProfile() {
   const { id } = useParams();
   const [user, setUser] = useState(null); // User data
   const [loading, setLoading] = useState(true); // Loading state
+    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+    const [openEditModal, setopenEditModal] = React.useState(false);
+    const [selectedUser, setSelectedUser] = React.useState(null);
+    
+  const navigate = useNavigate();
+
+      //  Trigger delete modal
+  const handleDelete = (user) => {
+    setSelectedUser(user);
+    setOpenDeleteModal(true);
+  };
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setopenEditModal(true);
+  };
+    //  Confirm delete logic
+  const confirmDelete = (id) => {
+    console.log("Confirmed delete user ID:", id);
+    // TODO: Make delete API call here
+    setOpenDeleteModal(false);
+  };
+  const confirmEdit = (id) => {
+    console.log("Confirmed edit user ID:", id);
+    // TODO: Make delete API call here
+    setopenEditModal(false);
+      navigate(`/update/${id}`);
+  };
+
 
   // Example: Fetch user data from API or local mock
   useEffect(() => {
@@ -44,13 +74,26 @@ function UserProfile() {
                  <Avatar
            alt={user.name}
            src={user.image}
-           sx={{ width: 300, height: 300, margin: '0 auto 1rem' }}
+           sx={{ width: 300, height: 300, margin: '0 auto 1rem',boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }}
          />
          <div>
-                  <IconButton   color="primary" >
+          <IconButton   
+           sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }}
+          color="primary" 
+           onClick={(e) => {
+             e.stopPropagation();
+             handleEdit(user); }}
+                              >
             <EditIcon />
          </IconButton>
-         <IconButton color="error">
+         <IconButton 
+         sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',marginLeft:'10px' }}
+         color="error"
+          onClick={(e) => {
+             e.stopPropagation();
+             handleDelete(user); // Pass full user
+             }}
+         >
              <DeleteIcon />
          </IconButton>
          </div>
@@ -80,7 +123,18 @@ function UserProfile() {
    
     </div>
     </div>
-
+    <DeleteUserModal
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        onConfirm={confirmDelete}
+        user={selectedUser}
+      />
+      <EdituserModal
+        open={openEditModal}
+        onClose={() => setopenEditModal(false)}
+        onConfirm={confirmEdit}
+        user={selectedUser}
+      />
     </>
 
   );
