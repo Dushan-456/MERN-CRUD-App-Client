@@ -13,9 +13,9 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate,Link  } from 'react-router-dom';
-import DeleteUserModal from '../DeleteUserModal'; 
+import DeleteUserModal from './DeleteUserModal'; 
 import Button from '@mui/material/Button';
-import EdituserModal from '../EdituserModal';
+import EdituserModal from './EdituserModal';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // Table columns configuration
