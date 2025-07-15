@@ -19,7 +19,6 @@
 }
 .left_side {
    flex: 20%;
-   background-color: rgb(160, 159, 159);
    padding-left: 20px;
    display: flex;
    flex-direction: column;
