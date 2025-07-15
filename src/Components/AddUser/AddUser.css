@@ -1,0 +1,15 @@
+.add_user{
+    display: flex;
+}
+
+.add_user_left{
+    flex: 60%;
+}
+.add_user_right{
+    flex: 40%;
+}
+.input{
+    display: flex;
+    gap: 2em;
+    margin: 20px;
+}
