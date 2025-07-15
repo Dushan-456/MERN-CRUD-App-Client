@@ -42,6 +42,50 @@ const users =[
       "__v": 0
     },
     {
+      "_id": "687533311010ddvbb466e10f5f",
+      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+      "name": "Dushan",
+      "gmail": "Dushan@mail.lk",
+      "age": 25,
+      "address": "Matara",
+      "createdAt": "2025-07-14T16:41:21.937Z",
+      "updatedAt": "2025-07-14T16:41:21.937Z",
+      "__v": 0
+    },
+    {
+      "_id": "687533311010djdb466e10f5f",
+      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+      "name": "Dushan",
+      "gmail": "Dushan@mail.lk",
+      "age": 25,
+      "address": "Matara",
+      "createdAt": "2025-07-14T16:41:21.937Z",
+      "updatedAt": "2025-07-14T16:41:21.937Z",
+      "__v": 0
+    },
+    {
+      "_id": "68753331101hvbj0ddb466e10f5f",
+      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+      "name": "Dushan",
+      "gmail": "Dushan@mail.lk",
+      "age": 25,
+      "address": "Matara",
+      "createdAt": "2025-07-14T16:41:21.937Z",
+      "updatedAt": "2025-07-14T16:41:21.937Z",
+      "__v": 0
+    },
+    {
+      "_id": "687533311h010ddb466e10f5f",
+      "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
+      "name": "Dushan",
+      "gmail": "Dushan@mail.lk",
+      "age": 25,
+      "address": "Matara",
+      "createdAt": "2025-07-14T16:41:21.937Z",
+      "updatedAt": "2025-07-14T16:41:21.937Z",
+      "__v": 0
+    },
+    {
       "_id": "6875399e935cd5be0955241d",
        "image":"https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D",
 
@@ -169,7 +213,9 @@ function UsersTable() {
                     if (column.id === 'action') {
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          <IconButton
+                          <IconButton 
+                            size="small"
+                            sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }}
                             color="primary"
                              onClick={(e) => {
                               e.stopPropagation();
@@ -179,6 +225,8 @@ function UsersTable() {
                             <EditIcon />
                           </IconButton>
                           <IconButton
+                          size="small"
+                            sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',marginLeft:'10px' }}
                             color="error"
                             onClick={(e) => {
                               e.stopPropagation();
