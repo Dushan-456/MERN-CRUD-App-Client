@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "./EditUser.css";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
   Container,
   Typography,
@@ -122,7 +123,7 @@ const EditUser = () => {
       </div>
       <div className="input">
              <Button variant="contained" fullWidth type="submit">
-              Add New User
+            Update User
             </Button>
       </div>
     
@@ -138,10 +139,12 @@ const EditUser = () => {
                 sx={{ width: 250, height: 250 }}
               />
               <Button
-                variant="contained"
+              size="small"
+              variant="outlined"
                 component="label"
+                startIcon={<CloudUploadIcon />}
               >
-                Upload Profile Picture
+                Change Profile Picture
                 <input
                   hidden
                   accept="image/*"
