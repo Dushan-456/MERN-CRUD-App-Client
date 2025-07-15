@@ -8,6 +8,7 @@ import Categories from "./Components/Categories/Categories";
 import SideNavBar from "./Components/SideNavBar/SideNavBar";
 import UserProfile from "./Components/UserProfile/UserProfile";
 import AddUser from "./Components/AddUser/AddUser";
+import EditUser from "./Components/EditUser/EditUser";
 
 function App() {
    return (
@@ -25,6 +26,7 @@ function App() {
                      <Route path="/products" element={<Products />} />
                      <Route path="/categories" element={<Categories />} />
                      <Route path="/profile/:id" element={<UserProfile />} />
+                     <Route path="/update/:id" element={<EditUser />} />
                      <Route path="/users/add" element={<AddUser />} />
 
                   </Routes>
