@@ -101,7 +101,6 @@ const columns = [
 //   ]
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-   
 
 function UsersTable() {
    const navigate = useNavigate();
@@ -110,16 +109,16 @@ function UsersTable() {
 
    const [users, setUsers] = React.useState([]);
 
- const fetchUsers = async () => {
-   try {
-      const res = await API.get("/user/all-users");
-      setUsers(res.data.data);
-   } catch (error) {
-      console.error("Error fetching users:", error);
-   } finally {
-      setLoading(false); 
-   }
-};
+   const fetchUsers = async () => {
+      try {
+         const res = await API.get("/user/all-users");
+         setUsers(res.data.data);
+      } catch (error) {
+         console.error("Error fetching users:", error);
+      } finally {
+         setLoading(false);
+      }
+   };
 
    React.useEffect(() => {
       fetchUsers();
@@ -171,7 +170,6 @@ function UsersTable() {
          </div>
       );
    }
-   
 
    return (
       <Paper sx={{ width: "100%" }}>
@@ -184,7 +182,7 @@ function UsersTable() {
                            key={column.id}
                            align={column.align}
                            style={{ minWidth: column.minWidth }}>
-                           {column.label}
+                           <b>{column.label}</b>
                         </TableCell>
                      ))}
                   </TableRow>
@@ -210,12 +208,16 @@ function UsersTable() {
                                     <TableCell
                                        key={column.id}
                                        align={column.align}>
-                                          <Avatar
-                                                alt={user.first_name}
-                                                  src={`${BASE_URL}/uploads/${value}`}
-                                                sx={{ width: 50, height: 50,fontSize: 30,borderRadius: "10%" }}
-                                                />
-                                    
+                                       <Avatar
+                                          alt={user.first_name}
+                                          src={`${BASE_URL}/uploads/${value}`}
+                                          sx={{
+                                             width: 50,
+                                             height: 50,
+                                             fontSize: 30,
+                                             borderRadius: "10%",
+                                          }}
+                                       />
                                     </TableCell>
                                  );
                               }
