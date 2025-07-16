@@ -39,10 +39,17 @@ const AddUser = () => {
    const navigate = useNavigate();
 
    const [formData, setFormData] = useState({
-      name: "",
+      first_name: "",
+      last_name: "",
+      dob: "",
+      designation: "",
+      mobile: "",
       gmail: "",
       age: "",
+      gender: "",
+      fb_profile: "",
       address: "",
+      profilePicture: null,
    });
 
    const [preview, setPreview] = useState(null);
@@ -77,25 +84,63 @@ const AddUser = () => {
       // .then(navigate(`/users`))
    };
 
-   const sendRequest = async () => {
-      try {
-         const res = await API.post("/user/add-user", {
-            name: formData.name,
-            gmail: formData.gmail,
-            age: formData.age,
-            address: formData.address,
-         });
+   // const sendRequest = async () => {
+   //    try {
+   //       const res = await API.post("/user/add-user", {
+   //          first_name: formData.first_name,
+   //          last_name: formData.last_name,
+   //          dob: formData.dob,
+   //          designation: formData.designation,
+   //          mobile: formData.mobile,
+   //          gmail: formData.gmail,
+   //          age: formData.age,
+   //          gender: formData.gender,
+   //          fb_profile: formData.fb_profile,
+   //          address: formData.address,
+   //          image: formData.image,
+        
+   //       });
 
-         console.log("User added:", res.data);
-         setSuccessDialogOpen(true);
-      } catch (error) {
-         console.error(
-            "Error adding user:",
-            error.response?.data || error.message
-         );
-         // Optionally, show error message to the user
-      }
-   };
+   //       console.log("User added:", res.data);
+   //       setSuccessDialogOpen(true);
+   //    } catch (error) {
+   //       console.error(
+   //          "Error adding user:",
+   //          error.response?.data || error.message
+   //       );
+   //       // Optionally, show error message to the user
+   //    }
+   // };
+const sendRequest = async () => {
+   try {
+      const form = new FormData();
+      form.append("first_name", formData.first_name);
+      form.append("last_name", formData.last_name);
+      form.append("dob", formData.dob);
+      form.append("designation", formData.designation);
+      form.append("mobile", formData.mobile);
+      form.append("gmail", formData.gmail);
+      form.append("age", formData.age);
+      form.append("gender", formData.gender);
+      form.append("fb_profile", formData.fb_profile);
+      form.append("address", formData.address);
+      form.append("profilePicture", formData.profilePicture); 
+
+      const res = await API.post("/user/add-user", form, {
+         headers: {
+            "Content-Type": "multipart/form-data"
+         }
+      });
+
+      console.log("User added:", res.data);
+      setSuccessDialogOpen(true);
+   } catch (error) {
+      console.error(
+         "Error adding user:",
+         error.response?.data || error.message
+      );
+   }
+};
 
 
    return (
@@ -109,28 +154,22 @@ const AddUser = () => {
                   <div className="input">
                      <TextField
                         label="First Name"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        fullWidth
-                     />
-                     <TextField
-                        label="Last Name"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        fullWidth
-                     />
-                  </div>
-                  <div className="input">
-                     <TextField
-                        label="Name"
-                        name="name"
-                        value={formData.name}
+                        name="first_name"
+                        value={formData.first_name}
                         onChange={handleChange}
                         fullWidth
                         required
                      />
+                     <TextField
+                        label="Last Name"
+                        name="last_name"
+                        value={formData.last_name}
+                        onChange={handleChange}
+                        fullWidth
+                        required
+                     />
+                  </div>
+                  <div className="input">
                      <TextField
                         label="Gmail"
                         name="gmail"
@@ -140,9 +179,27 @@ const AddUser = () => {
                         required
                      />
                   </div>
+                  <div className="input">
+                     <TextField
+                        label="Designation"
+                        name="designation"
+                        value={formData.designation}
+                        onChange={handleChange}
+                        fullWidth
+                        required
+                     />
+                     <TextField
+                        label="Mobile Number"
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        fullWidth
+                        required
+                     />
+                  </div>
 
                   <div className="input">
-                     <FormControl fullWidth>
+                     <FormControl fullWidth required>
                         <InputLabel>Gender</InputLabel>
                         <Select
                            name="gender"
@@ -177,7 +234,18 @@ const AddUser = () => {
                      <TextField
                         label="Addess"
                         name="address"
+                        required
                         value={formData.address}
+                        onChange={handleChange}
+                        fullWidth
+                     />
+                  </div>
+                  <div className="input">
+                     <TextField
+                        label="Facebook Profile Link"
+                        name="fb_profile"
+                        required
+                        value={formData.fb_profile}
                         onChange={handleChange}
                         fullWidth
                      />
