@@ -28,7 +28,6 @@ function App() {
                      <Route path="/profile/:id" element={<UserProfile />} />
                      <Route path="/update/:id" element={<EditUser />} />
                      <Route path="/users/add" element={<AddUser />} />
-
                   </Routes>
                </div>
             </div>
@@ -38,5 +37,3 @@ function App() {
 }
 
 export default App;
-
-// VITE_BASE_URL=http://localhost:5000
