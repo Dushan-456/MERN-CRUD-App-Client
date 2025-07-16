@@ -98,7 +98,7 @@ const AddUser = () => {
    //          fb_profile: formData.fb_profile,
    //          address: formData.address,
    //          image: formData.image,
-        
+
    //       });
 
    //       console.log("User added:", res.data);
@@ -111,37 +111,36 @@ const AddUser = () => {
    //       // Optionally, show error message to the user
    //    }
    // };
-const sendRequest = async () => {
-   try {
-      const form = new FormData();
-      form.append("first_name", formData.first_name);
-      form.append("last_name", formData.last_name);
-      form.append("dob", formData.dob);
-      form.append("designation", formData.designation);
-      form.append("mobile", formData.mobile);
-      form.append("gmail", formData.gmail);
-      form.append("age", formData.age);
-      form.append("gender", formData.gender);
-      form.append("fb_profile", formData.fb_profile);
-      form.append("address", formData.address);
-      form.append("profilePicture", formData.profilePicture); 
+   const sendRequest = async () => {
+      try {
+         const form = new FormData();
+         form.append("first_name", formData.first_name);
+         form.append("last_name", formData.last_name);
+         form.append("dob", formData.dob);
+         form.append("designation", formData.designation);
+         form.append("mobile", formData.mobile);
+         form.append("gmail", formData.gmail);
+         form.append("age", formData.age);
+         form.append("gender", formData.gender);
+         form.append("fb_profile", formData.fb_profile);
+         form.append("address", formData.address);
+         form.append("profilePicture", formData.profilePicture);
 
-      const res = await API.post("/user/add-user", form, {
-         headers: {
-            "Content-Type": "multipart/form-data"
-         }
-      });
+         const res = await API.post("/user/add-user", form, {
+            headers: {
+               "Content-Type": "multipart/form-data",
+            },
+         });
 
-      console.log("User added:", res.data);
-      setSuccessDialogOpen(true);
-   } catch (error) {
-      console.error(
-         "Error adding user:",
-         error.response?.data || error.message
-      );
-   }
-};
-
+         console.log("User added:", res.data);
+         setSuccessDialogOpen(true);
+      } catch (error) {
+         console.error(
+            "Error adding user:",
+            error.response?.data || error.message
+         );
+      }
+   };
 
    return (
       <>
