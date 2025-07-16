@@ -1,10 +1,9 @@
 import React from "react";
 import UsersTable from "./UsersTable";
 import "./Users.css";
-import Button from '@mui/material/Button';
-import { Link  } from 'react-router-dom';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 function Users() {
    return (
