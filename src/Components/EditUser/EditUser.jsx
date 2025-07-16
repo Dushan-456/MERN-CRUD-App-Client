@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./EditUser.css";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
-  Container,
   Typography,
   TextField,
   Button,
@@ -14,20 +13,69 @@ import {
   Avatar,
   Stack
 } from '@mui/material';
+import API from '../../assets/api';
+import { useParams } from 'react-router-dom';
+
+
 
 const EditUser = () => {
-  const [formData, setFormData] = useState({
-    firstName: 'Dushan',
-    lastName: 'Navodya',
-    gender: 'Male',
-    dob: '01/02/2025',
-    age: '24',
-    mobile: '',
-    linkedin: '',
-    profilePicture: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-  });
+
+  const { id } = useParams();
+    const [user, setUser] = useState(null); // User data
+  
+  //  Fetch user data from API 
+   const fetchUserProfile = async () => {
+   try {
+      const res = await API.get(`/user/${id}`);
+      setUser(res.data.data);
+   } catch (error) {
+      console.error("Error fetching userr Details:", error);
+   } 
+  //  finally {
+  //     setLoading(false); 
+  //  }
+};
+
+const [formData, setFormData] = useState({
+  firstName: '',
+  lastName: '',
+  gender: '',
+  dob: '',
+  age: '',
+  mobile: '',
+  linkedin: '',
+  profilePicture: ''
+});
+
+
+  useEffect(() => {  
+     fetchUserProfile();
+  }, [id]);
+
+
+  useEffect(() => {
+  if (user) {
+    setFormData({
+      firstName: user.name,
+      lastName: user.name,
+      gender: 'Male',
+      dob: '2025-01-02',
+      age: user.age,
+      mobile: '',
+      linkedin: '',
+      profilePicture: user.name || ''
+    });
+    setPreview(user.image || '');
+  }
+}, [user]);
 
   const [preview, setPreview] = useState(null);
+
+  useEffect(() => {
+  if (user && user.image) {
+    setPreview(user.image);
+  }
+}, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,11 +100,29 @@ const EditUser = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // TODO: Send formData to API (e.g., with FormData object)
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const updatedData = new FormData();
+    updatedData.append('name', formData.firstName);
+    updatedData.append('gmail', formData.lastName);
+    updatedData.append('age', formData.age);
+    updatedData.append('gender', formData.gender);
+    updatedData.append('dob', formData.dob);
+    updatedData.append('linkedin', formData.linkedin);
+    updatedData.append('mobile', formData.mobile);
+    if (formData.profilePicture instanceof File) {
+      updatedData.append('image', formData.profilePicture);
+    }
+
+    const res = await API.put(`/user/update-user/${id}`, updatedData);
+    console.log("User updated:", res.data);
+    // Show success or redirect
+  } catch (error) {
+    console.error("Update failed:", error.response?.data || error.message);
+  }
+};
+
 
   return (
     <>
