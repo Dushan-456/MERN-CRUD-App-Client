@@ -1,97 +1,102 @@
 import React, { useEffect, useState } from 'react';
 import "./EditUser.css";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
 import {
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Avatar,
-  Stack
+
+  Dialog,
+   DialogTitle,
+   DialogContent,
+   DialogActions,
+   Typography,
+   TextField,
+   Button,
+   Grid,
+   FormControl,
+   InputLabel,
+   Select,
+   Box,
+   MenuItem,
+   Avatar,
+   Stack,
 } from '@mui/material';
 import API from '../../assets/api';
-import { useParams } from 'react-router-dom';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditUser = () => {
 
+    const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+   // const [errorMessage, setErrorMessage] = useState("");
+
+   const navigate = useNavigate();
+
+
   const { id } = useParams();
-    const [user, setUser] = useState(null); // User data
-  
-  //  Fetch user data from API 
-   const fetchUserProfile = async () => {
-   try {
-      const res = await API.get(`/user/${id}`);
-      setUser(res.data.data);
-   } catch (error) {
-      console.error("Error fetching userr Details:", error);
-   } 
-  //  finally {
-  //     setLoading(false); 
-  //  }
-};
 
-const [formData, setFormData] = useState({
-  firstName: '',
-  lastName: '',
-  gender: '',
-  dob: '',
-  age: '',
-  mobile: '',
-  linkedin: '',
-  profilePicture: ''
-});
+  const [user, setUser] = useState(null);
+  const [preview, setPreview] = useState(null); // Preview image state
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    dob: "",
+    designation: "",
+    mobile: "",
+    gmail: "",
+    age: "",
+    gender: "",
+    fb_profile: "",
+    address: "",
+    profilePicture: null,
+  });
 
+  // FETCH user data and update formData + image preview
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const res = await API.get(`/user/${id}`);
+        const userData = res.data.data;
+        setUser(userData);
 
-  useEffect(() => {  
-     fetchUserProfile();
+        setFormData({
+          first_name: userData.first_name || "",
+          last_name: userData.last_name || "",
+          dob: userData.dob || "",
+          designation: userData.designation || "",
+          mobile: userData.mobile || "",
+          gmail: userData.gmail || "",
+          age: userData.age || "",
+          gender: userData.gender || "",
+          fb_profile: userData.fb_profile || "",
+          address: userData.address || "",
+          profilePicture: userData.profilePicture || null,
+        });
+
+        const baseUrl = import.meta.env.VITE_BASE_URL;
+        setPreview(`${baseUrl}/uploads/${userData.profilePicture}`);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserProfile();
   }, [id]);
 
-
-  useEffect(() => {
-  if (user) {
-    setFormData({
-      firstName: user.name,
-      lastName: user.name,
-      gender: 'Male',
-      dob: '2025-01-02',
-      age: user.age,
-      mobile: '',
-      linkedin: '',
-      profilePicture: user.name || ''
-    });
-    setPreview(user.image || '');
-  }
-}, [user]);
-
-  const [preview, setPreview] = useState(null);
-
-  useEffect(() => {
-  if (user && user.image) {
-    setPreview(user.image);
-  }
-}, [user]);
-
+  //  Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
+  // Handle image input and preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFormData((prev) => ({ ...prev, profilePicture: file }));
 
-      // Preview image
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -100,132 +105,159 @@ const [formData, setFormData] = useState({
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const updatedData = new FormData();
-    updatedData.append('name', formData.firstName);
-    updatedData.append('gmail', formData.lastName);
-    updatedData.append('age', formData.age);
-    updatedData.append('gender', formData.gender);
-    updatedData.append('dob', formData.dob);
-    updatedData.append('linkedin', formData.linkedin);
-    updatedData.append('mobile', formData.mobile);
-    if (formData.profilePicture instanceof File) {
-      updatedData.append('image', formData.profilePicture);
+  //  Handle form submit and send formData
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const updatedData = new FormData();
+
+      // Append all fields
+      updatedData.append("first_name", formData.first_name);
+      updatedData.append("last_name", formData.last_name);
+      updatedData.append("dob", formData.dob);
+      updatedData.append("designation", formData.designation);
+      updatedData.append("mobile", formData.mobile);
+      updatedData.append("gmail", formData.gmail);
+      updatedData.append("age", formData.age);
+      updatedData.append("gender", formData.gender);
+      updatedData.append("fb_profile", formData.fb_profile);
+      updatedData.append("address", formData.address);
+
+      // Only append profile picture if it’s a file (not a string URL)
+      if (formData.profilePicture instanceof File) {
+        updatedData.append("profilePicture", formData.profilePicture);
+      }
+
+      const res = await API.put(`/user/update-user/${id}`, updatedData);
+      console.log("User updated successfully:", res.data);
+
+  setSuccessDialogOpen(true);
+
+
+    } catch (error) {
+      console.error("Update failed:", error.response?.data || error.message);
     }
+  };
 
-    const res = await API.put(`/user/update-user/${id}`, updatedData);
-    console.log("User updated:", res.data);
-    // Show success or redirect
-  } catch (error) {
-    console.error("Update failed:", error.response?.data || error.message);
-  }
-};
-
+  //  Prevent rendering until user data is loaded
+  if (!user) return <div>Loading user data...</div>;
 
   return (
     <>
-     <form onSubmit={handleSubmit}>
-  <div className='add_user'>
-  <div className="add_user_left">
-          <Typography variant="h4" gutterBottom>
-        Update {formData.firstName}
-      </Typography>
-      <div className="input">
-            <TextField
-              label="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-            <TextField
-              label="Last Name"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-        
-        
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="add_user">
+          <div className="add_user_left">
+            <Typography variant="h4" gutterBottom>
+              Update {formData.first_name}
+            </Typography>
 
-      <div className="input">
-            <FormControl fullWidth required>
-              <InputLabel>Gender</InputLabel>
-              <Select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                label="Gender"
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-            </FormControl>
+            <div className="input">
+              <TextField label="First Name" name="first_name" value={formData.first_name} onChange={handleChange} fullWidth required />
+              <TextField label="Last Name" name="last_name" value={formData.last_name} onChange={handleChange} fullWidth required />
+            </div>
 
-            <TextField
-              type="date"
-              label="Date of Birth"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-             <TextField
-              label="Age"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-      </div>
-      <div className="input">
-             <Button variant="contained" fullWidth type="submit">
-            Update User
-            </Button>
-      </div>
-    
+            <div className="input">
+              <TextField label="Gmail" name="gmail" value={formData.gmail} onChange={handleChange} fullWidth required />
+            </div>
 
-  </div>
-  <div className="add_user_right">
+            <div className="input">
+              <TextField label="Designation" name="designation" value={formData.designation} onChange={handleChange} fullWidth required />
+              <TextField label="Mobile Number" name="mobile" value={formData.mobile} onChange={handleChange} fullWidth required />
+            </div>
 
-              <Grid item xs={12}>
-            <Stack direction="column" spacing={2} alignItems="center">
-              <Avatar
-                src={preview}
-                alt="Preview"
-                sx={{ width: 250, height: 250 }}
-              />
-              <Button
-              size="small"
-              variant="outlined"
-                component="label"
-                startIcon={<CloudUploadIcon />}
-              >
-                Change Profile Picture
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={handleImageChange}
-                />
+            <div className="input">
+              <FormControl fullWidth required>
+                <InputLabel>Gender</InputLabel>
+                <Select name="gender" value={formData.gender} onChange={handleChange} label="Gender">
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
+                </Select>
+              </FormControl>
+
+              <TextField type="date" label="Date of Birth" name="dob" value={formData.dob} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} />
+              <TextField label="Age" name="age" value={formData.age} onChange={handleChange} fullWidth required />
+            </div>
+
+            <div className="input">
+              <TextField label="Address" name="address" value={formData.address} onChange={handleChange} fullWidth required />
+            </div>
+
+            <div className="input">
+              <TextField label="Facebook Profile Link" name="fb_profile" value={formData.fb_profile} onChange={handleChange} fullWidth required />
+            </div>
+
+            <div className="input">
+              <Button variant="contained" fullWidth type="submit">
+                Update User
               </Button>
-            </Stack>
-          </Grid>
+            </div>
+          </div>
 
-  </div>
-  </div>
-  </form>
+          <div className="add_user_right">
+            <Grid item xs={12}>
+              <Stack direction="column" spacing={2} alignItems="center">
+                <Avatar src={preview} alt="Preview" sx={{ width: 250, height: 250 }} />
+                <Button size="small" variant="outlined" component="label" startIcon={<CloudUploadIcon />}>
+                  Change Profile Picture
+                  <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+                </Button>
+              </Stack>
+            </Grid>
+          </div>
+        </div>
+      </form>
+
+              <Dialog
+                  open={successDialogOpen}
+                  onClose={() => {
+                     setSuccessDialogOpen(false);
+                     navigate(`/profile/${id}`);
+                  }}>
+                  {/* Centered Icon */}
+                  <Box
+                     sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mt: 2,
+                     }}>
+                     <CheckCircleIcon
+                        sx={{
+                           width: 50,
+                           height: 50,
+                           color: "#02ab32",
+                        }}
+                     />
+                  </Box>
+      
+                  <DialogTitle sx={{ textAlign: "center" }}>User Updated</DialogTitle>
+      
+                  <DialogContent
+                     sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        textAlign: "center",
+                        px: 4,
+                     }}>
+                     <p>The user has been updated successfully!</p>
+                  </DialogContent>
+      
+                  <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+                     <Button
+                        onClick={() => {
+                           setSuccessDialogOpen(false);
+                           navigate(`/profile/${id}`);
+                        }}
+                        autoFocus
+                        variant="contained">
+                        OK
+                     </Button>
+                  </DialogActions>
+               </Dialog>
     </>
-
   );
 };
 
