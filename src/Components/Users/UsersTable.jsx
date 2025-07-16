@@ -5,6 +5,7 @@ import {
    TableBody,
    TableCell,
    TableContainer,
+   Avatar,
    TableHead,
    TablePagination,
    CircularProgress,
@@ -20,11 +21,11 @@ import API from "../../assets/api";
 
 // Table columns configuration
 const columns = [
-   { id: "image", label: "Image", align: "left", minWidth: 100 },
-   { id: "name", label: "Name", align: "left", minWidth: 100 },
+   { id: "profilePicture", label: "Image", align: "left", minWidth: 100 },
+   { id: "first_name", label: "Name", align: "left", minWidth: 100 },
    { id: "gmail", label: "Email", align: "left", minWidth: 170 },
    { id: "age", label: "Age", align: "left", minWidth: 70 },
-   { id: "address", label: "Address", align: "left", minWidth: 170 },
+   { id: "designation", label: "Designation", align: "left", minWidth: 170 },
    { id: "action", label: "Action", align: "left", minWidth: 170 },
 ];
 
@@ -99,6 +100,9 @@ const columns = [
 //     }
 //   ]
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+   
+
 function UsersTable() {
    const navigate = useNavigate();
 
@@ -162,11 +166,13 @@ function UsersTable() {
 
    if (loading) {
       return (
-         <profile className="profile_loading">
+         <div className="profile_loading">
             <CircularProgress color="success" />;
-         </profile>
+         </div>
       );
    }
+   
+
    return (
       <Paper sx={{ width: "100%" }}>
          <TableContainer sx={{ maxHeight: 600 }}>
@@ -199,20 +205,17 @@ function UsersTable() {
                            {columns.map((column) => {
                               const value = user[column.id];
 
-                              if (column.id === "image") {
+                              if (column.id === "profilePicture") {
                                  return (
                                     <TableCell
                                        key={column.id}
                                        align={column.align}>
-                                       <img
-                                          src={value}
-                                          alt="User"
-                                          style={{
-                                             height: 50,
-                                             width: 50,
-                                             borderRadius: "10%",
-                                          }}
-                                       />
+                                          <Avatar
+                                                alt={user.first_name}
+                                                  src={`${BASE_URL}/uploads/${value}`}
+                                                sx={{ width: 50, height: 50,fontSize: 30,borderRadius: "10%" }}
+                                                />
+                                    
                                     </TableCell>
                                  );
                               }
