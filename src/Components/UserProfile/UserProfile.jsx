@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Typography, Card, CardContent, Avatar, CircularProgress } from '@mui/material';
+import { Typography, Card, Button, Avatar, CircularProgress } from '@mui/material';
 import "./UserProfile.css";
 import {IconButton} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteUserModal from '../Users/DeleteUserModal';
 import EdituserModal from '../Users/EdituserModal';
+import API from '../../assets/api';
 
 
 
 function UserProfile() {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const { id } = useParams();
   const [user, setUser] = useState(null); // User data
   const [loading, setLoading] = useState(true); // Loading state
@@ -43,38 +46,41 @@ function UserProfile() {
   };
 
 
-  // Example: Fetch user data from API or local mock
+  //  Fetch user data from API 
+   const fetchUserProfile = async () => {
+   try {
+      const res = await API.get(`/user/${id}`);
+      setUser(res.data.data);
+   } catch (error) {
+      console.error("Error fetching userr Details:", error);
+   } finally {
+      setLoading(false); 
+   }
+};
   useEffect(() => {
-    // Simulate an API call with mock data
-    setTimeout(() => {
-      const mockUser = {
-        _id: id,
-        name: 'Dushan',
-        gmail: 'dushan@mail.lk',
-        age: 25,
-        address: 'Matara',
-        image:
-          'https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000',
-      };
-      setUser(mockUser);
-      setLoading(false);
-    }, 2000); // Simulate 1 second delay
+    //  API call 
+  
+     fetchUserProfile();
   }, [id]);
 
   if (loading) {
-    return <profile className="profile_loading">
+    return <div className="profile_loading">
         <CircularProgress color="success" />;
-        </profile>
+        </div>
   }
+  
+  if (!user) {
+  return <div style={{ textAlign: 'center',fontSize:30, marginTop: 100 }}>User not found.</div>;
+}
 
   return (
     <>
     <div className="profile">
             <div className="profile_left">
                  <Avatar
-           alt={user.name}
-           src={user.image}
-           sx={{ width: 300, height: 300, margin: '0 auto 1rem',boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }}
+           alt={user.first_name}
+           src={`${BASE_URL}/uploads/${user.profilePicture}`}
+           sx={{ width: 300, height: 300,fontSize: 138, margin: '0 auto 1rem',boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }}
          />
          <div>
           <IconButton   
@@ -98,26 +104,35 @@ function UserProfile() {
          </IconButton>
          </div>
          
-         <Typography variant="h4">{user.name}</Typography>
+         <Typography variant="h4"><b>{user.first_name}  {user.last_name}</b></Typography>
          <Typography variant="body1" color="text.secondary">
-           Email: {user.gmail}
+           <b>Email:</b> {user.gmail}
         </Typography>
     </div>
     <div className="profile_right">
         <div className="content">
                         <Typography variant="h5">Personal Details</Typography> <br />
-                        <Typography variant="body1" color="text.secondary"> First Name: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Last Name: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Gender: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Date Of Birth: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Age: {user.gmail} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>First Name:</b> {user.first_name} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>Last Name:</b> {user.last_name} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>Designation:</b> {user.designation} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>Gender:</b> {user.gender} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>Date Of Birth:</b> {user.dob} </Typography>
+                        <Typography variant="body1" color="text.secondary"> <b>Age:</b> {user.age} </Typography>
         </div>
         <div className="content">
             <Typography variant="h5">Contact Details</Typography><br />
-             <Typography variant="body1" color="text.secondary"> Email: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Mobile Number: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Facebook: {user.gmail} </Typography>
-                        <Typography variant="body1" color="text.secondary"> Linkdin: {user.gmail} </Typography>
+             <Typography variant="body1" color="text.secondary"> <b>Email:</b> {user.gmail} </Typography>
+             <Typography variant="body1" color="text.secondary"> <b>Address:</b> {user.address} </Typography>
+              <Typography variant="body1" color="text.secondary"> <b>Mobile Number:</b> {user.mobile} </Typography>
+               <br />
+                <Button 
+                  variant="contained"
+                  component="a"
+                  href={user.fb_profile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Facebook</Button>
+                     
             
             </div>
    
