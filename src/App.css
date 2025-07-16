@@ -31,9 +31,8 @@
    margin-left: 20px;
    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
    border-radius: 5px;
-
 }
 .side_nav li {
-    list-style: none;
-    border-bottom:2px solid black;
+   list-style: none;
+   border-bottom: 2px solid black;
 }
