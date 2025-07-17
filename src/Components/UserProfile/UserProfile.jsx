@@ -14,6 +14,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteUserModal from "../Users/DeleteUserModal";
 import EdituserModal from "../Users/EdituserModal";
 import API from "../../assets/api";
+import { fetchUserProfile } from "../../Functions/functions";
+import UserDeletedModal from "../Users/UserDeletedModal";
 
 function UserProfile() {
    const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -23,6 +25,7 @@ function UserProfile() {
    const [loading, setLoading] = useState(true); // Loading state
    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
    const [openEditModal, setopenEditModal] = React.useState(false);
+    const [userDeletedModal, setuserDeletedModal] = React.useState(false);
    const [selectedUser, setSelectedUser] = React.useState(null);
 
    const navigate = useNavigate();
@@ -37,11 +40,22 @@ function UserProfile() {
       setopenEditModal(true);
    };
    //  Confirm delete logic
-   const confirmDelete = (id) => {
+   const confirmDelete = async (id) => {
+   try {
       console.log("Confirmed delete user ID:", id);
-      // TODO: Make delete API call here
+
+      const res = await API.delete(`/user/delete-user/${id}`);
+      console.log("User deleted successfully:", res.data);
+
       setOpenDeleteModal(false);
-   };
+      setuserDeletedModal(true);
+
+
+   } catch (error) {
+      console.error("Failed to delete user:", error.response?.data || error.message);
+      // Optionally show error feedback to user
+   }
+};
    const confirmEdit = (id) => {
       console.log("Confirmed edit user ID:", id);
       // TODO: Make delete API call here
@@ -50,20 +64,21 @@ function UserProfile() {
    };
 
    //  Fetch user data from API
-   const fetchUserProfile = async () => {
-      try {
-         const res = await API.get(`/user/${id}`);
-         setUser(res.data.data);
-      } catch (error) {
-         console.error("Error fetching userr Details:", error);
-      } finally {
-         setLoading(false);
-      }
-   };
+  //  const fetchUserProfile = async () => {
+  //     try {
+  //        const res = await API.get(`/user/${id}`);
+  //        setUser(res.data.data);
+  //     } catch (error) {
+  //        console.error("Error fetching userr Details:", error);
+  //     } finally {
+  //        setLoading(false);
+  //     }
+  //  };
+
+
    useEffect(() => {
       //  API call
-
-      fetchUserProfile();
+      fetchUserProfile(id,setUser,setLoading);
    }, [id]);
 
    if (loading) {
@@ -135,6 +150,10 @@ function UserProfile() {
                   <Typography variant="h5">Personal Details</Typography> <br />
                   <Typography variant="body1" color="text.secondary">
                      {" "}
+                     <b>ID:</b> {user._id}{" "}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                     {" "}
                      <b>First Name:</b> {user.first_name}{" "}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
@@ -197,6 +216,12 @@ function UserProfile() {
             onConfirm={confirmEdit}
             user={selectedUser}
          />
+          <UserDeletedModal
+            open={userDeletedModal}
+            onClose={() => setuserDeletedModal(false)}
+            onOk={() =>  navigate(`/users`)}
+
+       />
       </>
    );
 }
