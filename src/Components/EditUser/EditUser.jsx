@@ -263,8 +263,9 @@ const EditUser = () => {
                      <Stack direction="column" spacing={2} alignItems="center">
                         <Avatar
                            src={preview}
-                           alt="Preview"
-                           sx={{ width: 250, height: 250 }}
+                           alt={formData.first_name}
+                           
+                           sx={{ width: 250,fontSize: 138, height: 250 }}
                         />
                         <Button
                            size="small"
