@@ -14,10 +14,12 @@ import {
    InputLabel,
    Select,
    Box,
+   Alert ,
    MenuItem,
    Avatar,
    Stack,
 } from "@mui/material";
+
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import API from "../../assets/api";
@@ -53,6 +55,8 @@ const AddUser = () => {
    });
 
    const [preview, setPreview] = useState(null);
+   const [serverError, setServerError] = useState('');
+
 
    const handleChange = (e) => {
       const { name, value } = e.target;
@@ -139,6 +143,8 @@ const AddUser = () => {
             "Error adding user:",
             error.response?.data || error.message
          );
+        setServerError(error.response.data.error || "Something went wrong");
+
       }
    };
 
@@ -146,10 +152,14 @@ const AddUser = () => {
       <>
          <form onSubmit={handleSubmit}>
             <div className="add_user">
+
                <div className="add_user_left">
                   <Typography variant="h4" gutterBottom>
                      Add New User
                   </Typography>
+               {  serverError && <Stack sx={{ width: '100%' }} spacing={2}>
+                        <Alert severity="error">{serverError}</Alert>
+                     </Stack>}
                   <div className="input">
                      <TextField
                         label="First Name"
