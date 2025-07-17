@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import DeleteUserModal from "./DeleteUserModal";
 import EdituserModal from "./EdituserModal";
 import API from "../../assets/api";
+import { fetchUsers } from "../../Functions/functions";
+import UserDeletedModal from "./UserDeletedModal";
 
 // Table columns configuration
 const columns = [
@@ -109,25 +111,26 @@ function UsersTable() {
 
    const [users, setUsers] = React.useState([]);
 
-   const fetchUsers = async () => {
-      try {
-         const res = await API.get("/user/all-users");
-         setUsers(res.data.data);
-      } catch (error) {
-         console.error("Error fetching users:", error);
-      } finally {
-         setLoading(false);
-      }
-   };
+   // const fetchUsers = async () => {
+   //    try {
+   //       const res = await API.get("/user/all-users");
+   //       setUsers(res.data.data);
+   //    } catch (error) {
+   //       console.error("Error fetching users:", error);
+   //    } finally {
+   //       setLoading(false);
+   //    }
+   // };
 
    React.useEffect(() => {
-      fetchUsers();
+      fetchUsers(setUsers,setLoading);
    }, []);
    const [page, setPage] = React.useState(0);
    const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
    //  Modal state for delete and edit confirmation
    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+   const [userDeletedModal, setuserDeletedModal] = React.useState(false);
    const [openEditModal, setopenEditModal] = React.useState(false);
    const [selectedUser, setSelectedUser] = React.useState(null);
 
@@ -141,17 +144,30 @@ function UsersTable() {
       setopenEditModal(true);
    };
 
+
+   
    //  Confirm delete logic
-   const confirmDelete = (id) => {
+   const confirmDelete = async (id) => {
+   try {
       console.log("Confirmed delete user ID:", id);
-      // TODO: Make delete API call here
+
+      const res = await API.delete(`/user/delete-user/${id}`);
+      console.log("User deleted successfully:", res.data);
+
+      fetchUsers(setUsers,setLoading);
       setOpenDeleteModal(false);
-   };
+      setuserDeletedModal(true);
+
+   } catch (error) {
+      console.error("Failed to delete user:", error.response?.data || error.message);
+      // Optionally show error feedback to user
+   }
+};
+   
    const confirmEdit = (id) => {
       console.log("Confirmed edit user ID:", id);
-      // TODO: Make delete API call here
-      setopenEditModal(false);
       navigate(`/update/${id}`);
+      setopenEditModal(false);
    };
 
    const handleChangePage = (_, newPage) => {
@@ -162,6 +178,8 @@ function UsersTable() {
       setRowsPerPage(+event.target.value);
       setPage(0);
    };
+
+
 
    if (loading) {
       return (
@@ -293,6 +311,12 @@ function UsersTable() {
             onClose={() => setopenEditModal(false)}
             onConfirm={confirmEdit}
             user={selectedUser}
+         />
+         <UserDeletedModal
+            open={userDeletedModal}
+            onClose={() => setuserDeletedModal(false)}
+            onOk={() => setuserDeletedModal(false)}
+         
          />
       </Paper>
    );
