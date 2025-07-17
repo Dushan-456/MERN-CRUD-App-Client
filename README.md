@@ -26,21 +26,28 @@ mern-crud-app-client/   # React Frontend (Vite)
 ```
 ---
 ```
-mern-crud-app-client/    # Express Backend (API)
-├── public/           
+mern-crud-app-server/    # Express Backend (API)
+├── Controllers
+|    └── userControlers.mjs
+├── Models
+|    └── UserModel.mjs
+├── Routes
+|    ├── index.mjs
+|    └── userRouter.mjs
 ├── src
-|    ├── assets
-|    ├── components
-|    ├── functions
-|    ├── App.css
-|    ├── App.jsx
-|    ├── index.css
-|    └── main.jsx
+|    └── db
+|         └── config.mjs    
+├── uploads
+|    ├── uloaded images
+|    └── uloaded images
+├── Utils
+|    ├── error-creator.mjs
+|    ├── validationMethods.mjs
+|    └── upload.mjs
 ├── .env
-├── index.html
+├── server.mjs
 ├── package-lock.json
 ├── package.json
-├── vite.config.js
 └── README.md
 ```
 
@@ -83,13 +90,11 @@ mern-crud-app-client/    # Express Backend (API)
 
 ### 1. Clone the Repository
 
-Frontend
 ```bash
 git clone https://github.com/Dushan-456/MERN-CRUD-App-Client
 cd MERN-CRUD-App-Client
 ```
 
-Backend
 ```bash
 git clone https://github.com/Dushan-456/MERN-CRUD-App-Server
 cd MERN-CRUD-App-Server
@@ -99,7 +104,6 @@ cd MERN-CRUD-App-Server
 
 ### 2. Set Up the Backend 
 
-Backend
 ```bash
 cd MERN-CRUD-App-Server
 npm install
@@ -107,7 +111,6 @@ npm install
 
 #### Create a `.env` file
 
-Backend
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -123,7 +126,6 @@ npm run dev   # Starts server with nodemon
 
 ### 3. Set Up the Frontend
 
-Frontend
 ```bash
 cd MERN-CRUD-App-Client
 npm install
@@ -131,7 +133,6 @@ npm install
 
 #### Create a `.env` file
 
-Frontend
 ```env
 VITE_BASE_URL=your_base_url
 ```
@@ -156,7 +157,7 @@ Backend runs at: [http://localhost:5000](http://localhost:5000)
 | PUT    | /user/update-user/:id| Update user by ID    |
 | DELETE | /user/delete-user/:id| Delete user by ID    |
 
-> Base URL: `http://localhost:5000`
+> Base URL: `http://localhost:5000/api/v1/`
 
 ---
 
@@ -177,11 +178,6 @@ Backend runs at: [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 📸 Screenshot
-
-> _(Add a screenshot of your app UI here)_
-
----
 
 ## 🧑‍💻 Author
 
