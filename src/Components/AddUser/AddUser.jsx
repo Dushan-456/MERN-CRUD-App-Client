@@ -225,6 +225,7 @@ const AddUser = () => {
                         type="date"
                         label="Date of Birth"
                         name="dob"
+                        required
                         value={formData.dob}
                         onChange={handleChange}
                         fullWidth
